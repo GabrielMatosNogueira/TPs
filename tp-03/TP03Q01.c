@@ -17,16 +17,19 @@ bool isWovel(const char string[], int index, bool condition)
     {
         result = true;
     }
-    else if (!(string[index] == 'A' || string[index] == 'E' || string[index] == 'I' || string[index] == 'O' || string[index] == 'U' ||
-               string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u')) 
+    else
     {
-        condition = false;
-        result = condition;
-    } 
-    else 
-    {
-        condition = isWovel(string, index+1, condition);
-        result = condition;
+        if (!(string[index] == 'A' || string[index] == 'E' || string[index] == 'I' || string[index] == 'O' || string[index] == 'U' ||
+                string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u')) 
+        {
+            condition = false;
+            result = condition;
+        } 
+        else 
+        {
+            condition = isWovel(string, index+1, condition);
+            result = condition;
+        }
     }
     return result;
 }
@@ -38,16 +41,35 @@ bool isConsoant(const char string[], int index, bool condition)
     {
         result = true;
     }
-    else if ((string[index] == 'A' || string[index] == 'E' || string[index] == 'I' || string[index] == 'O' || string[index] == 'U' ||
-               string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u') && !(string[index] >=0 && string[index] <= 9) ) 
+    else
     {
-        condition = false;
-        result = condition;
-    } 
-    else 
-    {
-        condition = isConsoant(string, index+1, condition);
-        result = condition;
+        if (string[index] >= '0' && string[index] <= '9') 
+        {
+            condition = false;
+            result = condition;
+        }
+        else
+        {
+            if (string[index] == 'A' || string[index] == 'E' || string[index] == 'I' || string[index] == 'O' || string[index] == 'U' ||
+                string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u') 
+            {
+                condition = false;
+                result = condition;
+            }
+            else
+            {
+                if ((string[index] >= 'A' && string[index] <= 'Z') || (string[index] >= 'a' && string[index] <= 'z')) 
+                {
+                    condition = isConsoant(string, index+1, condition);
+                    result = condition;
+                }
+                else 
+                {
+                    condition = false;
+                    result = condition;
+                }
+            }
+        }
     }
     return result;
 }
@@ -61,21 +83,44 @@ bool isNumber(const char string[], int index, bool condition)
     }
     else
     {
-        if(!(string[index]>=0 && string[index]<=9))
+        if((string[index]>='0' && string[index]<='9'))
         {
-            condition = false;
+            condition = isNumber(string, index+1, condition);
             result = condition;
         }
         else 
         {
-            condition = isConsoant(string, index+1, condition);
+            condition = false;
             result = condition;
         }
     }
     return result;
 }
 
-bool isRealNumber()
+bool isRealNumber(const char string[], int index, bool condition, int specialAssing)
+{
+    bool result;
+    if (string[index] == '\0' || string[index] == '\n')
+    {
+        result = (specialAssing == 1) ? true : false;
+    }
+    else
+    {
+        if (string[index] >= '0' && string[index] <= '9')
+        {
+            result = isRealNumber(string, index + 1, condition, specialAssing);
+        }
+        else if ((string[index] == '.' || string[index] == ',') && specialAssing == 0)
+        {
+            result = isRealNumber(string, index + 1, condition, specialAssing + 1);
+        }
+        else
+        {
+            result = false;
+        }
+    }
+    return result;
+}
 
 int main(void)
 {
@@ -90,6 +135,7 @@ int main(void)
         if(isWovel(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
         if(isConsoant(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
         if(isNumber(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
+        if(isRealNumber(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
 
         fgets(string, 100, stdin);
     }
