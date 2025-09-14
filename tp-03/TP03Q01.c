@@ -1,70 +1,97 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-int stringLength(char * string, int index)
+int stringLength(const char string[])
 {
-    int length=0;
-    if(string[index] == '\0')
+    int i=0;
+
+    while(string[i]!='\n'){i=i+1;}
+
+    return i;
+}
+
+bool isWovel(const char string[], int index, bool condition)
+{
+    bool result;
+    if (string[index] == '\0' || string[index] == '\n') 
     {
-        return index;
+        result = true;
+    }
+    else if (!(string[index] == 'A' || string[index] == 'E' || string[index] == 'I' || string[index] == 'O' || string[index] == 'U' ||
+               string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u')) 
+    {
+        condition = false;
+        result = condition;
+    } 
+    else 
+    {
+        condition = isWovel(string, index+1, condition);
+        result = condition;
+    }
+    return result;
+}
+
+bool isConsoant(const char string[], int index, bool condition)
+{
+    bool result;
+    if (string[index] == '\0' || string[index] == '\n') 
+    {
+        result = true;
+    }
+    else if ((string[index] == 'A' || string[index] == 'E' || string[index] == 'I' || string[index] == 'O' || string[index] == 'U' ||
+               string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u') && !(string[index] >=0 && string[index] <= 9) ) 
+    {
+        condition = false;
+        result = condition;
+    } 
+    else 
+    {
+        condition = isConsoant(string, index+1, condition);
+        result = condition;
+    }
+    return result;
+}
+
+bool isNumber(const char string[], int index, bool condition)
+{
+    bool result;
+    if (string[index] == '\0' || string[index] == '\n') 
+    {
+        result = true;
     }
     else
     {
-        length++;
-        stringLength(string, index+1);
-
-        return length;
-    }
-}
-
-bool isVowel(char *string, int index)
-{
-    if(string[index] == '\0')
-    {
-        
-    }
-}
-
-bool validateVowelComposition(char * string, int index, bool validation)
-{
-    if((string[index] == '\0'))
-    {
-        return validation;
-    }
-    else
-    {
-        if((string[index] == 'A' || string[index] == 'E' || string[index] == 'I' || string[index] == 'O' || string[index] == 'U') ||
-           (string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u'))
+        if(!(string[index]>=0 && string[index]<=9))
         {
-            validateVowelComposition(string, index+1, validation);
+            condition = false;
+            result = condition;
         }
-        else
+        else 
         {
-            validateVowelComposition(string, stringLength(string, 0), !validation);
+            condition = isConsoant(string, index+1, condition);
+            result = condition;
         }
     }
+    return result;
 }
 
-
+bool isRealNumber()
 
 int main(void)
 {
-    char string[100] = "";
-    int strLength = 0;
+    char string[100]="";
     int index = 0;
-    bool vaderValidator = true;
+    bool condition = false;
 
     fgets(string, 100, stdin);
 
-    while(string[0] != 'F' && string[1] != 'I' && string[2] != 'M' && stringLength(string, index) != 3)
+    while (!(stringLength(string) == 3 && string[0] == 'F' && string[1] == 'I' && string[2] == 'M'))
     {
-        if(validateVowelComposition(string, index, vaderValidator)){printf("SIM ");}else{printf("NAO ");}
-        //if(validateConsoantComposition(string, index, vaderValidator)){printf("SIM ");}else{printf("NAO ");}
-        //if(validateNumberComposition(string, index, vaderValidator)){printf("SIM ");}else{printf("NAO ");}
-        //if(validateRealNumberComposition(string, index, vaderValidator)){printf("SIM ");}else{printf("NAO ");}
+        if(isWovel(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
+        if(isConsoant(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
+        if(isNumber(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
 
-        scanf(" %s", string);
-        getchar( );
+        fgets(string, 100, stdin);
     }
 
     return 0;
