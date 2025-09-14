@@ -3,32 +3,31 @@
 
 int stringLength(const char string[])
 {
-    int i=0;
-
-    while(string[i]!='\n'){i=i+1;}
-
+    int i = 0;
+    while (string[i] != '\0' && string[i] != '\n')
+    {
+        i = i + 1;
+    }
     return i;
 }
 
 bool isWovel(const char string[], int index, bool condition)
 {
-    bool result;
-    if (string[index] == '\0' || string[index] == '\n') 
+    bool result = true;
+    if (string[index] == '\0' || string[index] == '\n')
     {
         result = true;
     }
     else
     {
         if (!(string[index] == 'A' || string[index] == 'E' || string[index] == 'I' || string[index] == 'O' || string[index] == 'U' ||
-                string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u')) 
+              string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u'))
         {
-            condition = false;
-            result = condition;
-        } 
-        else 
+            result = false;
+        }
+        else
         {
-            condition = isWovel(string, index+1, condition);
-            result = condition;
+            result = isWovel(string, index + 1, condition);
         }
     }
     return result;
@@ -36,37 +35,33 @@ bool isWovel(const char string[], int index, bool condition)
 
 bool isConsoant(const char string[], int index, bool condition)
 {
-    bool result;
-    if (string[index] == '\0' || string[index] == '\n') 
+    bool result = true;
+    if (string[index] == '\0' || string[index] == '\n')
     {
         result = true;
     }
     else
     {
-        if (string[index] >= '0' && string[index] <= '9') 
+        if (string[index] >= '0' && string[index] <= '9')
         {
-            condition = false;
-            result = condition;
+            result = false;
         }
         else
         {
             if (string[index] == 'A' || string[index] == 'E' || string[index] == 'I' || string[index] == 'O' || string[index] == 'U' ||
-                string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u') 
+                string[index] == 'a' || string[index] == 'e' || string[index] == 'i' || string[index] == 'o' || string[index] == 'u')
             {
-                condition = false;
-                result = condition;
+                result = false;
             }
             else
             {
-                if ((string[index] >= 'A' && string[index] <= 'Z') || (string[index] >= 'a' && string[index] <= 'z')) 
+                if ((string[index] >= 'A' && string[index] <= 'Z') || (string[index] >= 'a' && string[index] <= 'z'))
                 {
-                    condition = isConsoant(string, index+1, condition);
-                    result = condition;
+                    result = isConsoant(string, index + 1, condition);
                 }
-                else 
+                else
                 {
-                    condition = false;
-                    result = condition;
+                    result = false;
                 }
             }
         }
@@ -76,43 +71,41 @@ bool isConsoant(const char string[], int index, bool condition)
 
 bool isNumber(const char string[], int index, bool condition)
 {
-    bool result;
-    if (string[index] == '\0' || string[index] == '\n') 
+    bool result = true;
+    if (string[index] == '\0' || string[index] == '\n')
     {
         result = true;
     }
     else
     {
-        if((string[index]>='0' && string[index]<='9'))
+        if ((string[index] >= '0' && string[index] <= '9'))
         {
-            condition = isNumber(string, index+1, condition);
-            result = condition;
+            result = isNumber(string, index + 1, condition);
         }
-        else 
+        else
         {
-            condition = false;
-            result = condition;
+            result = false;
         }
     }
     return result;
 }
 
-bool isRealNumber(const char string[], int index, bool condition, int specialAssing)
+bool isRealNumber(const char string[], int index, bool condition, int commaAndDot)
 {
-    bool result;
+    bool result = false;
     if (string[index] == '\0' || string[index] == '\n')
     {
-        result = (specialAssing == 1) ? true : false;
+        result = (commaAndDot == 1 && index > 1);
     }
     else
     {
         if (string[index] >= '0' && string[index] <= '9')
         {
-            result = isRealNumber(string, index + 1, condition, specialAssing);
+            result = isRealNumber(string, index + 1, condition, commaAndDot);
         }
-        else if ((string[index] == '.' || string[index] == ',') && specialAssing == 0)
+        else if ((string[index] == '.' || string[index] == ',') && commaAndDot == 0)
         {
-            result = isRealNumber(string, index + 1, condition, specialAssing + 1);
+            result = isRealNumber(string, index + 1, condition, commaAndDot + 1);
         }
         else
         {
@@ -124,20 +117,20 @@ bool isRealNumber(const char string[], int index, bool condition, int specialAss
 
 int main(void)
 {
-    char string[100]="";
+    char string[200] = "";
     int index = 0;
     bool condition = false;
 
-    fgets(string, 100, stdin);
+    fgets(string, 200, stdin);
 
     while (!(stringLength(string) == 3 && string[0] == 'F' && string[1] == 'I' && string[2] == 'M'))
     {
         if(isWovel(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
         if(isConsoant(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
         if(isNumber(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
-        if(isRealNumber(string, index, condition)){printf("SIM ");} else {printf("NAO ");}
+        if(isRealNumber(string, index, condition, 0)){printf("SIM\n");} else {printf("NAO\n");}
 
-        fgets(string, 100, stdin);
+        fgets(string, 200, stdin);
     }
 
     return 0;
