@@ -1,0 +1,8 @@
+Lógica do código:
+O programa irá ler uma linha por vez do arquivo csv, criando uma instância de game
+que terá seu:
+ID, NAME, releaseDate, estimatedOwners,
+price, supportedLanguages, metaCritic,
+userscore, achievements, publishers,
+developers, categories, genres e tags
+preenchidos nesta instancia
