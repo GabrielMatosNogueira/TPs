@@ -194,13 +194,16 @@ public class Games
 
     public static void buscarPorId(int ID, Games[] games)
     {
-        for(int i = 0; i < games.length; i++)
+        int i = 0;
+        boolean found = false;
+        while(i < games.length && !found)
         {
             if(games[i] != null && games[i].getId() == ID)
             {
                 games[i].printGame();
-                break;
+                found = true;
             }
+            i++;
         }
     }
 
