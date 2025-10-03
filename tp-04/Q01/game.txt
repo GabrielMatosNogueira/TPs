@@ -77,21 +77,74 @@ public class Game
     }
 
     /**
-     * @brief 
+     * @brief SetterValues
      * @param filename
      * @return
      * @throws java.io.IOException
      */
-    public Game setterInstanceValues(Game game, String)
+    public static Game setterInstanceValues(Game[] games, String line)
     {
-        int i = 0;
-        while(i < line.length())
-        {
-            // Obter o ID do jogo
-            
+        String[] fields = new String[14];
+        int fieldIndex = 0;
+        boolean inQuotes = false;
+        StringBuilder sb = new StringBuilder();
 
-            i=i+1;
+        for (int i = 0; i < line.length(); i++) 
+        {
+            char c = line.charAt(i);
+
+            if (c == '"')
+            {
+                inQuotes = !inQuotes;
+            } 
+            else if (c == ',' && !inQuotes) 
+            {
+                fields[fieldIndex++] = sb.toString();
+                sb.setLength(0);
+            } 
+            else 
+            {
+                sb.append(c);
+            }
         }
+        // Add last field
+        if (fieldIndex < fields.length) 
+        {
+            fields[fieldIndex] = sb.toString();
+        }
+
+        Game game = new Game();
+        game.setId(Integer.parseInt(fields[0]));
+        game.setName(fields[1]);
+        game.setReleaseDate(fields[2]);
+        game.setEstimatedOwners(Integer.parseInt(fields[3]));
+        game.setPrice(Double.parseDouble(fields[4]));
+        game.setSupportedLanguages(fields[5]);
+        game.setMetaCritic(Integer.parseInt(fields[6]));
+        game.setUserScore(Integer.parseInt(fields[7]));
+        game.setAchievements(Integer.parseInt(fields[8]));
+        game.setPublishers(fields[9]);
+        game.setDevelopers(fields[10]);
+        game.setCategories(fields[11]);
+        game.setGenres(fields[12]);
+        game.setTags(fields[13]);
+
+        System.out.println("=> " + game.getId() + " ## " 
+            + game.getName() + " ## " 
+            + game.getReleaseDate() + " ## " 
+            + game.getEstimatedOwners() + " ## " 
+            + game.getPrice() + " ## " 
+            + game.getSupportedLanguages() + " ## " 
+            + game.getMetaCritic() + " ## " 
+            + game.getUserScore() + " ## " 
+            + game.getAchievements() + " ## " 
+            + game.getPublishers() + " ## " 
+            + game.getDevelopers() + " ## " 
+            + game.getCategories() + " ## " 
+            + game.getGenres() + " ## " 
+            + game.getTags() + " ##");
+
+        return game;
     }
 
     /**
@@ -119,7 +172,7 @@ public class Game
         }
 
         // Contador numero de jogos
-        while(csvScanner.hasNext() && continueReading)
+        while(csvScanner.hasNext() && !continueReading)
         {
             line = csvScanner.nextLine();
             if(line.charAt(0) != 'F' && line.charAt(1) != 'I' && line.charAt(2) != 'M' && line.length() != 3)
@@ -128,7 +181,7 @@ public class Game
             }
             else
             {
-                continueReading = false;
+                continueReading = true;
             }
         }
 
@@ -140,6 +193,7 @@ public class Game
             line = csvScanner.nextLine();
             if(line.charAt(0) != 'F' && line.charAt(1) != 'I' && line.charAt(2) != 'M' && line.length() != 3)
             {
+                System.out.println(line);
                 game[i] = setterInstanceValues(game, line);
                 i = i+1;
             }
